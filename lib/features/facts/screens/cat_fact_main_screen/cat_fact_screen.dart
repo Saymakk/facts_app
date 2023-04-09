@@ -68,12 +68,10 @@ class _FactScreenState extends State<FactScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
-            ),
+
             blocImage(),
             const SizedBox(
-              height: 50,
+              height: 30,
             ),
             blocFact(),
             const Expanded(
