@@ -28,64 +28,59 @@ class _FactScreenState extends State<FactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyBox = const SnackBar(content: Text('History is empty yet!'));
+    final clearedBox = const SnackBar(content: Text('History is cleared!'));
     return Scaffold(
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () {
-              _box.clear();
+            onPressed: () async {
+              if (_box.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(emptyBox);
+              } else {
+                await _box.clear();
+                ScaffoldMessenger.of(context).showSnackBar(clearedBox);
+              }
             },
-            child: Text(
+            child: const Text(
               'Clear history!',
               style: TextStyle(
                 color: Colors.red,
               ),
             ),
-          )
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FactHistoryPage(),
+                ),
+              );
+            },
+            child: const Text(
+              'Facts history',
+              style: TextStyle(color: Colors.green),
+            ),
+          ),
         ],
       ),
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FactHistoryPage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Facts history',
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
+            const SizedBox(
+              height: 30,
             ),
             blocImage(),
-            blocFact(),
-            Container(
-              padding: EdgeInsets.all(10),
-              width: double.infinity,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
-                onPressed: () async {
-                  context.read<CatFactCubit>().fetchFact();
-                  // CatImageProvider().loadImage();
-                  context.read<CatImageCubit>().fetchImage();
-                  // setState(() {});
-                },
-                child: const Text(
-                  'Another fact!',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+            const SizedBox(
+              height: 50,
             ),
+            blocFact(),
+            const Expanded(
+                child: SizedBox(
+              height: 10,
+            )),
+            changeFactButton(),
           ],
         ),
       ),
@@ -96,7 +91,7 @@ class _FactScreenState extends State<FactScreen> {
     return BlocBuilder<CatImageCubit, CatImageState>(
       builder: (context, state) {
         if (state is CatImageLoading) {
-          return  DefaultTextStyle(
+          return DefaultTextStyle(
             style: const TextStyle(
               fontSize: 20.0,
               color: Colors.black,
@@ -104,17 +99,13 @@ class _FactScreenState extends State<FactScreen> {
             child: AnimatedTextKit(
               animatedTexts: [
                 WavyAnimatedText('Loading image...'),
-                WavyAnimatedText('Loading image...'),
-
               ],
               isRepeatingAnimation: true,
-
             ),
           );
         } else if (state is CatImageLoaded) {
           return Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -139,11 +130,12 @@ class _FactScreenState extends State<FactScreen> {
       },
     );
   }
+
   Widget blocFact() {
     return BlocBuilder<CatFactCubit, CatFactState>(
       builder: (context, state) {
         if (state is CatFactLoading) {
-          return  DefaultTextStyle(
+          return DefaultTextStyle(
             style: const TextStyle(
               fontSize: 20.0,
               color: Colors.black,
@@ -151,11 +143,8 @@ class _FactScreenState extends State<FactScreen> {
             child: AnimatedTextKit(
               animatedTexts: [
                 WavyAnimatedText('Loading fact...'),
-                WavyAnimatedText('Loading fact...'),
-
               ],
               isRepeatingAnimation: true,
-
             ),
           );
         } else if (state is CatFactLoaded) {
@@ -183,6 +172,28 @@ class _FactScreenState extends State<FactScreen> {
           return const Text('Press the button to fetch a cat fact!');
         }
       },
+    );
+  }
+
+  Widget changeFactButton() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      width: double.infinity,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
+        onPressed: () async {
+          context.read<CatFactCubit>().fetchFact();
+          // CatImageProvider().loadImage();
+          context.read<CatImageCubit>().fetchImage();
+          // setState(() {});
+        },
+        child: const Text(
+          'Another fact!',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ),
     );
   }
 }

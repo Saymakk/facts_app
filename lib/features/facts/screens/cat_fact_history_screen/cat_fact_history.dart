@@ -22,7 +22,10 @@ class FactHistoryPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: Image.asset('assets/cat.png'),
-                      title: Text('${box.get(index)['fact']}'),
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Text('${box.get(index)['fact']}'),
+                      ),
                       subtitle: Text('${box.get(index)['date']}'),
                     );
                   },
