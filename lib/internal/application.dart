@@ -1,9 +1,10 @@
-import 'package:facts_app/features/facts/cubit/cat_fact_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../features/facts/screens/cat_fact_main_screen/cat_fact_screen.dart';
+import '../features/facts/screens/cat_fact_main_screen/cubit/cat_fact_cubit.dart';
+import '../features/facts/screens/cat_fact_main_screen/cubit/cat_image_cubit.dart';
 
 class FactApp extends StatelessWidget {
   const FactApp({super.key});
@@ -22,10 +23,19 @@ class FactApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: GoogleFonts.merriweather().fontFamily,
       ),
-      home: BlocProvider(
-        create: (BuildContext context) => CatFactCubit(),
-        child: const FactScreen(),
-      ),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (BuildContext context) => CatFactCubit(),
+            child: const FactScreen(),
+          ),
+          BlocProvider(
+            create: (BuildContext context) => CatImageCubit(),
+            child: const FactScreen(),
+          ),
+        ],
+        child: FactScreen(),
+      )
     );
   }
 }

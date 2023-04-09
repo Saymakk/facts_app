@@ -3,24 +3,12 @@
 part of 'cat_fact_service.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-CatFact _$CatFactFromJson(Map<String, dynamic> json) => CatFact(
-      fact: json['fact'] as String?,
-    );
-
-Map<String, dynamic> _$CatFactToJson(CatFact instance) => <String, dynamic>{
-      'fact': instance.fact,
-    };
-
-// **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _RestClient implements RestClient {
+class _RestClient implements CatFactService {
   _RestClient(
     this._dio, {
     this.baseUrl,

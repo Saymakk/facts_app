@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:facts_app/retrofit_repository/cat_fact_service.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 
-import '../../../repository/abstract_api.dart';
-import '../../../repository/cat_fact_api.dart';
+import '../../../../../retrofit_repository/cat_fact/cat_fact_service.dart';
 
 part 'cat_fact_state.dart';
 
@@ -17,8 +15,8 @@ class CatFactCubit extends Cubit<CatFactState> {
     final dio = Dio();
     emit(CatFactLoading());
     try {
-      print("LOADING.....");
-      final fact = await RestClient(dio).getFact();
+      print("LOADING FACT.....");
+      final fact = await CatFactService(dio).getFact();
       Map facts = {
         'fact': fact,
         'date':

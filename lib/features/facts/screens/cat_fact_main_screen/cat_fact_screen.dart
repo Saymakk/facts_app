@@ -1,10 +1,11 @@
-import 'package:dio/dio.dart';
-import 'package:facts_app/features/facts/cubit/cat_fact_cubit.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cat_fact_history_screen/cat_fact_history.dart';
+import 'cubit/cat_fact_cubit.dart';
+import 'cubit/cat_image_cubit.dart';
 
 class FactScreen extends StatefulWidget {
   const FactScreen({Key? key}) : super(key: key);
@@ -21,12 +22,9 @@ class _FactScreenState extends State<FactScreen> {
   @override
   void initState() {
     super.initState();
-    _loadImage();
     context.read<CatFactCubit>().fetchFact();
+    context.read<CatImageCubit>().fetchImage();
   }
-
-  String? fact;
-  dynamic image;
 
   @override
   Widget build(BuildContext context) {
@@ -67,57 +65,20 @@ class _FactScreenState extends State<FactScreen> {
                 ),
               ),
             ),
-            BlocBuilder<CatFactCubit, CatFactState>(
-              builder: (context, state) {
-                if (state is CatFactLoading) {
-                  return const CircularProgressIndicator();
-                } else if (state is CatFactLoaded) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        imageProvider != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image(
-                                  image: imageProvider,
-                                  width: MediaQuery.of(context).size.width * .8,
-                                ),
-                              )
-                            : const CircularProgressIndicator(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          state.fact,
-                          style: const TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (state is CatFactError) {
-                  return Text(
-                    state.message,
-                    style: const TextStyle(fontSize: 18),
-                  );
-                } else {
-                  return const Text('Press the button to fetch a cat fact!');
-                }
-              },
-            ),
+            blocImage(),
+            blocFact(),
             Container(
               padding: EdgeInsets.all(10),
               width: double.infinity,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () async {
-
                   context.read<CatFactCubit>().fetchFact();
-                  _loadImage();
+                  // CatImageProvider().loadImage();
+                  context.read<CatImageCubit>().fetchImage();
                   // setState(() {});
                 },
-                child: Text(
+                child: const Text(
                   'Another fact!',
                   style: TextStyle(
                     color: Colors.black,
@@ -131,22 +92,97 @@ class _FactScreenState extends State<FactScreen> {
     );
   }
 
-  Future<void> _loadImage() async {
-    try {
-      final response = await Dio().get(
-        'https://cataas.com/cat',
-        options: Options(
-          responseType: ResponseType.bytes,
-        ),
-      );
-      final bytes = response.data;
-      final image = await decodeImageFromList(bytes);
-      setState(() {
-        imageProvider = MemoryImage(bytes);
-      });
+  Widget blocImage() {
+    return BlocBuilder<CatImageCubit, CatImageState>(
+      builder: (context, state) {
+        if (state is CatImageLoading) {
+          return  DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                WavyAnimatedText('Loading image...'),
+                WavyAnimatedText('Loading image...'),
 
-    } catch (e) {
-      print('Error loading image: $e');
-    }
+              ],
+              isRepeatingAnimation: true,
+
+            ),
+          );
+        } else if (state is CatImageLoaded) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image(
+                    fit: BoxFit.fill,
+                    image: state.image,
+                    width: MediaQuery.of(context).size.width * .8,
+                    // height: MediaQuery.of(context).size.height * .5,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (state is CatImageError) {
+          return Text(
+            state.message,
+            style: const TextStyle(fontSize: 18),
+          );
+        } else {
+          return const Text('');
+        }
+      },
+    );
+  }
+  Widget blocFact() {
+    return BlocBuilder<CatFactCubit, CatFactState>(
+      builder: (context, state) {
+        if (state is CatFactLoading) {
+          return  DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                WavyAnimatedText('Loading fact...'),
+                WavyAnimatedText('Loading fact...'),
+
+              ],
+              isRepeatingAnimation: true,
+
+            ),
+          );
+        } else if (state is CatFactLoaded) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    state.fact,
+                    style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (state is CatFactError) {
+          return Text(
+            state.message,
+            style: const TextStyle(fontSize: 18),
+          );
+        } else {
+          return const Text('Press the button to fetch a cat fact!');
+        }
+      },
+    );
   }
 }
