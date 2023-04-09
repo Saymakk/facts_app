@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:facts_app/features/facts/cubit/cat_fact_cubit.dart';
-import 'package:facts_app/features/facts/ui/cat_fact_history.dart';
-import 'package:facts_app/repository/abstract_api.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../repository/cat_fact_api.dart';
+import '../cat_fact_history_screen/cat_fact_history.dart';
 
 class FactScreen extends StatefulWidget {
   const FactScreen({Key? key}) : super(key: key);

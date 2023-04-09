@@ -1,7 +1,9 @@
 import 'package:facts_app/features/facts/cubit/cat_fact_cubit.dart';
-import 'package:facts_app/features/facts/ui/cat_fact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../features/facts/screens/cat_fact_main_screen/cat_fact_screen.dart';
+
 
 class FactApp extends StatelessWidget {
   const FactApp({super.key});
