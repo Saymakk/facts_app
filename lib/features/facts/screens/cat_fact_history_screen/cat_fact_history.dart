@@ -6,21 +6,27 @@ class FactHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _box = Hive.box('facts');
+    final box = Hive.box('facts');
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView.separated(
-            separatorBuilder: (BuildContext context, int index) {
-              return Divider();
-            },
-            itemCount: _box.length,
-            itemBuilder: (context, index) {
-              return Text('${_box.get(index)}');
-            },
-          ),
+          child: box.isEmpty
+              ? const Center(child:  Text('Here is still nothing!'))
+              : ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider();
+                  },
+                  itemCount: box.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Image.asset('assets/cat.png'),
+                      title: Text('${box.get(index)['fact']}'),
+                      subtitle: Text('${box.get(index)['date']}'),
+                    );
+                  },
+                ),
         ),
       ),
     );

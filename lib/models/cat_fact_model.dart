@@ -1,10 +1,10 @@
 
-class CatFact {
+class CatFactModel {
   String fact;
 
-  CatFact({required this.fact, });
+  CatFactModel({required this.fact, });
 
-  factory CatFact.fromJson(Map<String, dynamic> json) => CatFact(
+  factory CatFactModel.fromJson(Map<String, dynamic> json) => CatFactModel(
     fact: json['fact'],
   );
 }

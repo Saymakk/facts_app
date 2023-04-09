@@ -33,11 +33,17 @@ class _FactScreenState extends State<FactScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              onPressed: () {
-                _box.clear();
-              },
-              icon: Icon(Icons.delete_forever))
+          TextButton(
+            onPressed: () {
+              _box.clear();
+            },
+            child: Text(
+              'Clear history!',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          )
         ],
       ),
       body: SafeArea(
@@ -51,10 +57,14 @@ class _FactScreenState extends State<FactScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const FactHistoryPage()),
+                      builder: (context) => const FactHistoryPage(),
+                    ),
                   );
                 },
-                child: const Text('Facts history'),
+                child: const Text(
+                  'Facts history',
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
             ),
             BlocBuilder<CatFactCubit, CatFactState>(
@@ -67,13 +77,17 @@ class _FactScreenState extends State<FactScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         imageProvider != null
-                            ? Image(
-                              image: imageProvider,
-                              width:
-                                  MediaQuery.of(context).size.width * .8,
-                            )
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image(
+                                  image: imageProvider,
+                                  width: MediaQuery.of(context).size.width * .8,
+                                ),
+                              )
                             : const CircularProgressIndicator(),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Text(
                           state.fact,
                           style: const TextStyle(fontSize: 18),
@@ -88,18 +102,28 @@ class _FactScreenState extends State<FactScreen> {
                     style: const TextStyle(fontSize: 18),
                   );
                 } else {
-                  return const Text(
-                      'Press the button to fetch a cat fact!');
+                  return const Text('Press the button to fetch a cat fact!');
                 }
               },
             ),
-            OutlinedButton(
-              onPressed: () async {
-                await _loadImage();
-                context.read<CatFactCubit>().fetchFact();
-                setState(() {});
-              },
-              child: Text('Another fact!'),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: double.infinity,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
+                onPressed: () async {
+
+                  context.read<CatFactCubit>().fetchFact();
+                  _loadImage();
+                  // setState(() {});
+                },
+                child: Text(
+                  'Another fact!',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -109,13 +133,18 @@ class _FactScreenState extends State<FactScreen> {
 
   Future<void> _loadImage() async {
     try {
-      final response = await Dio().get('https://cataas.com/cat',
-          options: Options(responseType: ResponseType.bytes));
+      final response = await Dio().get(
+        'https://cataas.com/cat',
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
+      );
       final bytes = response.data;
       final image = await decodeImageFromList(bytes);
       setState(() {
         imageProvider = MemoryImage(bytes);
       });
+
     } catch (e) {
       print('Error loading image: $e');
     }

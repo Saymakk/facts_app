@@ -7,7 +7,7 @@ class FactApiRepository implements AbstractFactsApi {
   @override
   Future<String> fetchFact() async {
     final Dio dio = Dio();
-    const String url = 'https://catfact.ninja/fact?max_length=140';
+    const String url = 'https://catfact.ninja/fact';
     Response response = await dio.get(url);
     final data = response.data['fact'] as String;
     debugPrint(data.toString());
