@@ -13,7 +13,11 @@ class FactHistoryPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: box.isEmpty
-              ? const Center(child:  Text('Here is still nothing!'))
+              ? const Center(
+                  child: Text(
+                    'Here is still nothing!',
+                  ),
+                )
               : ListView.separated(
                   separatorBuilder: (BuildContext context, int index) {
                     return const Divider();
@@ -21,12 +25,18 @@ class FactHistoryPage extends StatelessWidget {
                   itemCount: box.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: Image.asset('assets/cat.png'),
+                      leading: Image.asset(
+                        'assets/cat.png',
+                      ),
                       title: Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text('${box.get(index)['fact']}'),
+                        child: Text(
+                          '${box.get(index)['fact']}',
+                        ),
                       ),
-                      subtitle: Text('${box.get(index)['date']}'),
+                      subtitle: Text(
+                        '${box.get(index)['date']}',
+                      ),
                     );
                   },
                 ),

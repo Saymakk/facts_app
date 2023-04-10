@@ -8,10 +8,10 @@ class CatImageLoading extends CatImageState {}
 class CatImageLoaded extends CatImageState {
   final MemoryImage image;
 
-  CatImageLoaded(this.image) {}
+  CatImageLoaded(this.image);
 }
 class CatImageError extends CatImageState {
   final String message;
 
-  CatImageError(this.message) {}
+  CatImageError(this.message);
 }

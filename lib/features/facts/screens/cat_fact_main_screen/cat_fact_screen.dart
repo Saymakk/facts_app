@@ -18,6 +18,8 @@ class _FactScreenState extends State<FactScreen> {
   dynamic imageProvider;
 
   final _box = Hive.box('facts');
+  final emptyBox = const SnackBar(content: Text('History is empty yet!'));
+  final clearedBox = const SnackBar(content: Text('History is cleared!'));
 
   @override
   void initState() {
@@ -28,8 +30,6 @@ class _FactScreenState extends State<FactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final emptyBox = const SnackBar(content: Text('History is empty yet!'));
-    final clearedBox = const SnackBar(content: Text('History is cleared!'));
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -43,7 +43,7 @@ class _FactScreenState extends State<FactScreen> {
               }
             },
             child: const Text(
-              'Clear history!',
+              'Clear history',
               style: TextStyle(
                 color: Colors.red,
               ),
@@ -66,18 +66,19 @@ class _FactScreenState extends State<FactScreen> {
         ],
       ),
       body: SafeArea(
+        minimum: EdgeInsets.only(top: 15),
         child: Column(
           children: [
-
             blocImage(),
             const SizedBox(
               height: 30,
             ),
             blocFact(),
             const Expanded(
-                child: SizedBox(
-              height: 10,
-            )),
+              child: SizedBox(
+                height: 10,
+              ),
+            ),
             changeFactButton(),
           ],
         ),
@@ -89,29 +90,38 @@ class _FactScreenState extends State<FactScreen> {
     return BlocBuilder<CatImageCubit, CatImageState>(
       builder: (context, state) {
         if (state is CatImageLoading) {
-          return DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 20.0,
-              color: Colors.black,
-            ),
-            child: AnimatedTextKit(
-              animatedTexts: [
-                WavyAnimatedText('Loading image...'),
-              ],
-              isRepeatingAnimation: true,
-            ),
+          return Column(
+            children: [
+              SizedBox(height: 100,),
+              DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    WavyAnimatedText('Loading image...'),
+                  ],
+                  isRepeatingAnimation: true,
+                ),
+              ),
+              SizedBox(height: 50,),
+            ],
           );
         } else if (state is CatImageLoaded) {
           return Center(
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image(
-                    fit: BoxFit.fill,
-                    image: state.image,
-                    width: MediaQuery.of(context).size.width * .8,
-                    // height: MediaQuery.of(context).size.height * .5,
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+
+                    child: Image(
+                      fit: BoxFit.cover,
+                      image: state.image,
+                      width: MediaQuery.of(context).size.width * .8,
+                    ),
                   ),
                 ),
               ],
@@ -123,7 +133,7 @@ class _FactScreenState extends State<FactScreen> {
             style: const TextStyle(fontSize: 18),
           );
         } else {
-          return const Text('');
+          return const Text('Press the button to fetch a cat image!');
         }
       },
     );
@@ -154,7 +164,7 @@ class _FactScreenState extends State<FactScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     state.fact,
-                    style: const TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -178,15 +188,16 @@ class _FactScreenState extends State<FactScreen> {
       padding: const EdgeInsets.all(10),
       width: double.infinity,
       child: OutlinedButton(
-        style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
+        style: OutlinedButton.styleFrom(
+
+          backgroundColor:  Colors.green.withOpacity(.3),
+        ),
         onPressed: () async {
           context.read<CatFactCubit>().fetchFact();
-          // CatImageProvider().loadImage();
           context.read<CatImageCubit>().fetchImage();
-          // setState(() {});
         },
         child: const Text(
-          'Another fact!',
+          'Another fact',
           style: TextStyle(
             color: Colors.black,
           ),

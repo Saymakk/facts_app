@@ -9,6 +9,9 @@ part 'cat_fact_state.dart';
 
 class CatFactCubit extends Cubit<CatFactState> {
   CatFactCubit() : super(CatFactInitial());
+
+  final _date = DateTime.now();
+
   final _box = Hive.box('facts');
 
   Future<void> fetchFact() async {
@@ -20,7 +23,7 @@ class CatFactCubit extends Cubit<CatFactState> {
       Map facts = {
         'fact': fact,
         'date':
-            '${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day} / ${DateTime.now().hour}:${DateTime.now().minute}',
+            '${_date.year}.${_date.month}.${_date.day} / ${_date.hour}:${_date.minute}',
       };
       _box.add(facts);
       print(_box.values);

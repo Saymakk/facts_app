@@ -11,7 +11,6 @@ class CatImageCubit extends Cubit<CatImageState> {
   CatImageCubit() : super(CatImageInitial());
 
   Future<void> fetchImage() async {
-    final dio = Dio();
     emit(CatImageLoading());
     try {
       print("LOADING IMAGE....");

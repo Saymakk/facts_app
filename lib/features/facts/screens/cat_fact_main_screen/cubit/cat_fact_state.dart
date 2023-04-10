@@ -10,11 +10,11 @@ class CatFactLoading extends CatFactState {}
 class CatFactLoaded extends CatFactState {
    final String fact;
 
-  CatFactLoaded( this.fact) {}
+  CatFactLoaded( this.fact);
 }
 
 class CatFactError extends CatFactState {
    final String message;
 
-  CatFactError(this.message) {}
+  CatFactError(this.message);
 }

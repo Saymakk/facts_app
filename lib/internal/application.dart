@@ -12,30 +12,27 @@ class FactApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xffeafff2),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xffeafff2),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: GoogleFonts.poppins().fontFamily,
         ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: GoogleFonts.merriweather().fontFamily,
-      ),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (BuildContext context) => CatFactCubit(),
-            child: const FactScreen(),
-          ),
-          BlocProvider(
-            create: (BuildContext context) => CatImageCubit(),
-            child: const FactScreen(),
-          ),
-        ],
-        child: FactScreen(),
-      )
-    );
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (BuildContext context) => CatFactCubit(),
+            ),
+            BlocProvider(
+              create: (BuildContext context) => CatImageCubit(),
+            ),
+          ],
+          child: const FactScreen(),
+        ));
   }
 }
