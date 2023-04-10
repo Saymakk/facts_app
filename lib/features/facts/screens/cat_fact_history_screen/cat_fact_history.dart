@@ -26,7 +26,7 @@ class FactHistoryPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: Image.asset(
-                        'assets/cat.png',
+                        'assets/images/cat.png',
                       ),
                       title: Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
